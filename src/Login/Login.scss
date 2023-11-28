@@ -1,0 +1,50 @@
+.Login-Card{
+    display: flex;
+}
+.Main-Div{
+    background-color: rgb(43, 76, 226);
+    height: 100vh;
+}
+.Row-Div{
+    width: 24rem;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    gap: 2vh;
+}
+.Col-Div{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.CheckBox-align{
+   display: flex;
+   gap: 0.5rem;
+}
+.Button-align{
+    display: flex;
+    width: 45rem;
+}
+.Button-Size{
+    width: 45rem;
+    text-align: center;
+}
+.Forgot-Password{
+    display: flex;
+    flex-direction: row;
+    gap: 55%;
+}
+.SignUp-Card{
+    display: flex;
+    width: 60rem;
+}
+.SignUp-Card h1{
+    text-align: left;
+}
+.SignUp-Card .Row-Div{
+    width: 60rem;
+    display: flex;
+    text-align: center;
+    flex-direction: row;
+    gap: 1rem;
+}
