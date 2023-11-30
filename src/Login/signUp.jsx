@@ -1,100 +1,134 @@
 import React, { Component } from 'react'
-import { Divider, Input, Card, Row, Col, Select } from "antd"
+import { Divider, Input, Card, Row, Col, Select, Collapse } from "antd"
+import {FieldConstants , NamingConstants} from '../Constants/FieldConstants'
+
+const { TextArea } = Input;
 
 export class SignUp extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      fatherName: "",
-      password: "",
-      confirmPassword: "",
-      mobileNo:"",
-      genderList:[
-        {
-          id:1,
-          value:"Male",
-        },
-        {
-          id:2,
-          value:"Female"
-        },
-      ],
-      genderIdSelectedOption:null
+      jobTypeList:FieldConstants.SignUp.jobTypeList,
+      genderIdSelectedOption:null,
+      renderfields:null,
+      values:{},
+      dropDownValues:{}
     }
 
   }
   textChange = (event) => {
     const { name, value } = event.target
     this.setState({
-      [name]: value
+      values: {[name]:value}
     })
   }
-  dropDownChange = (selected,obj,event) =>{
-    console.log(selected,obj,event)
+  dropDownChange = (selected,obj,isFromHeader) =>{
     this.setState({
-      genderIdSelectedOption: obj
+      [obj?.name + "SelectedOption"]: obj,
     })
+    if(isFromHeader){
+    this.renderfields(obj?.value)
+    }
+  }
+
+  renderfields = (type) =>{
+    let { values, dropDownValues } = this.state
+    const fieldSet = Object.keys(FieldConstants.SignUp.renderFields[type])
+    let fields = []
+    fieldSet.forEach((item)=>{
+      fields.push(FieldConstants.SignUp.renderFields[type][item])
+      if(FieldConstants.SignUp.renderFields[type][item].type == NamingConstants.dropDown){
+        this.setState({
+          dropDownValues:{
+            [FieldConstants.SignUp.renderFields[type][item].name + "SelectedOption"]: null
+          }
+        })
+      }
+    })
+    let renderfields = null;
+    renderfields = fields.map((item)=>{
+      switch(item.type){
+        case NamingConstants.text:
+          return(
+            <>
+            <Col span={item.fieldsize} className={item.className} >
+                <label><b>{item.label}:</b></label>
+                <Input value={values[item.name]} name={item.name} type={item.type} onChange={this.textChange}></Input>
+              </Col>
+            </>
+          )
+          case NamingConstants.email:
+          return(
+            <>
+            <Col span={item.fieldsize} className={item.className} >
+                <label><b>{item.label}:</b></label>
+                <Input value={values[item.name]} name={item.name} type={item.type} onChange={this.textChange}></Input>
+              </Col>
+            </>
+          )
+          case NamingConstants.dropDown:
+          return(
+            <>
+            <Col span={item.fieldsize} className={item.className}>
+            <label><b>{item.label}: </b></label>
+            <Select 
+            value={dropDownValues[item.name + "SelectedOptiom"]}
+            onChange={(e,obj)=>this.dropDownChange(e,obj,false)}
+            placeholder={item.placeholder}
+            options={item.list} />
+            </Col>
+            </>
+          )
+          case NamingConstants.textArea:
+          return(
+            <>
+            <Col span={item.fieldsize} className={item.className} >
+                <label><b>{item.label}:</b></label>
+                <TextArea value={values[item.name]} name={item.name} rows={item.rows} onChange={this.textChange}></TextArea>
+              </Col>
+            </>
+          )
+          case NamingConstants.date:
+            return(
+              <>
+              <Col span={item.fieldsize} className={item.className} >
+                  <label><b>{item.label}:</b></label>
+                  <Input value={values[item.name]} name={item.name} type={item.type} onChange={this.dateChange}></Input>
+                </Col>
+              </>
+            )
+      }
+    })
+    this.setState({renderfields})
   }
  
   render() {
     const {
-      firstName,
-      lastName,
-      email,
-      dateOfBirth,
-      fatherName,
-      password,
-      confirmPassword,
-      mobileNo,
-      genderList,
-      genderIdSelectedOption
+      jobTypeList,
+      jobTypeIdSelectedOption,
+      renderfields
     } = this.state
     return (
       <>
         <Divider className='Main-Div' orientation="middle">
           <Card className='SignUp-Card' sm={3}>
-            <h1>Sign Up</h1>
-            <Row className='Row-Div'>
-              <Col span="11" className='Col-Div' >
-                <label><b>First Name:</b></label>
-                <Input value={firstName} name='firstName' onChange={this.textChange}></Input>
-              </Col>
-              <Col span="11" className='Col-Div' >
-                <label><b>Last Name:</b></label>
-                <Input value={lastName} name='lastName' onChange={this.textChange}></Input>
-              </Col>
-              <Col span="11" className='Col-Div' >
-                <label><b>Father Name:</b></label>
-                <Input value={fatherName} name='fatherName' onChange={this.textChange}></Input>
-              </Col>
-              <Col span="11" className='Col-Div' >
-                <label><b>DOB:</b></label>
-                <Input value={dateOfBirth} name='dateOfBirth' type='date' onChange={(e,obj)=> this.textChange(e,obj)}></Input>
-              </Col>
-              <Col span="11" className='Col-Div' >
-                <label><b>Email:</b></label>
-                <Input value={email} name='email' type='email' onChange={this.textChange}></Input>
-              </Col>
-              <Col span="11" className='Col-Div' >
-                <label><b>Password:</b></label>
-                <Input value={password} name='password' type='password' onChange={this.textChange}></Input>
-              </Col>
-              <Col span="11" className='Col-Div' >
-                <label><b>Confirm Password:</b></label>
-                <Input value={confirmPassword} name='confirmPassword' type='password' onChange={this.textChange}></Input>
-              </Col>
-              <Col span="11" className='Col-Div' >
-                <label><b>Mobile:</b></label>
-                <Input value={mobileNo} name='mobileNo' onChange={this.textChange}></Input>
-              </Col>
-              <Col span="11" className='Col-Div' >
-                <label><b>Gender:</b></label>
-                <Select value={genderIdSelectedOption} name='genderId'  options={genderList} onChange={this.dropDownChange}></Select>
-              </Col>
+            <h1>Registration</h1>
+            <Col span="3">
+            <label><b>Registration Type : </b></label>
+            <Select 
+            value={jobTypeIdSelectedOption}
+            placeholder = "Select Sign Up Type"
+            onChange={(e,obj)=>this.dropDownChange(e,obj,true)}
+            name='signUpType'
+            options={jobTypeList}>
+            </Select></Col>
+          </Card>
+          <Card bordered={false} className='SignUp-Toggle-Card'>
+          <Collapse accordion ghost={true} bordered={false}>
+          <Row className='Row-Div'>
+            {renderfields ? renderfields : ""}
             </Row>
+          </Collapse>
           </Card>
         </Divider>
       </>
