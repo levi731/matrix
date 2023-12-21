@@ -56,6 +56,7 @@ export class SignUp extends Component {
                 <Input value={values[item.name]} name={item.name} type={item.type} onChange={this.textChange}></Input>
               </Col>
             </>
+            
           )
           case NamingConstants.email:
           return(
