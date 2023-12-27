@@ -38,21 +38,28 @@
 }
 .SignUp-Card{
     display: flex;
-    width: 90rem;
+    width: 86rem;
     height: 20vh;
 }
 .SignUp-Toggle-Card{
     display: flex;
-    width: 90rem;
+    width: 86rem;
     height: 70vh;
 }
 .SignUp-Toggle h1{
     text-align: left;
 }
 .SignUp-Toggle-Card .Row-Div{
-    width: 85rem;
+    width: 83rem;
     display: flex;
     text-align: center;
     flex-direction: row;
     gap: 1rem;
+    padding: 15px;
+}
+.signUp-Submit{
+    display: flex;
+    top: 10px;
+    width: 5rem;
+    float: right;
 }

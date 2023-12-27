@@ -1,49 +1,33 @@
-import React, { Component } from 'react'
-import { Divider, Input, Card, Row, Col, Select, Collapse } from "antd"
+import React, { useReducer } from 'react'
+import { Divider, Input, Card, Row, Col, Select, Collapse, Form, Button } from "antd"
 import {FieldConstants , NamingConstants} from '../Constants/FieldConstants'
-
+import { useForm, Controller, SubmitHandler } from "react-hook-form"
 const { TextArea } = Input;
+export const SignUp = () => {
 
-export class SignUp extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      jobTypeList:FieldConstants.SignUp.jobTypeList,
-      genderIdSelectedOption:null,
-      renderfields:null,
-      values:{},
-      dropDownValues:{}
-    }
+  const [state, setState] = useReducer((oldState,newState)=>({...oldState,...newState}),{
+    jobTypeList:FieldConstants.SignUp.jobTypeList,
+    jobTypeIdSelectedOption:null
+  })
 
-  }
-  textChange = (event) => {
-    const { name, value } = event.target
-    this.setState({
-      values: {[name]:value}
-    })
-  }
-  dropDownChange = (selected,obj,isFromHeader) =>{
-    this.setState({
-      [obj?.name + "SelectedOption"]: obj,
-    })
-    if(isFromHeader){
-    this.renderfields(obj?.value)
-    }
-  }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm()
 
-  renderfields = (type) =>{
-    let { values, dropDownValues } = this.state
+   const renderfields = (type) =>{
     const fieldSet = Object.keys(FieldConstants.SignUp.renderFields[type])
     let fields = []
     fieldSet.forEach((item)=>{
       fields.push(FieldConstants.SignUp.renderFields[type][item])
-      if(FieldConstants.SignUp.renderFields[type][item].type == NamingConstants.dropDown){
-        this.setState({
-          dropDownValues:{
-            [FieldConstants.SignUp.renderFields[type][item].name + "SelectedOption"]: null
-          }
-        })
-      }
+    })
+    fields.forEach((item)=>{
+      setValue(item.name, '');
     })
     let renderfields = null;
     renderfields = fields.map((item)=>{
@@ -53,7 +37,11 @@ export class SignUp extends Component {
             <>
             <Col span={item.fieldsize} className={item.className} >
                 <label><b>{item.label}:</b></label>
-                <Input value={values[item.name]} name={item.name} type={item.type} onChange={this.textChange}></Input>
+                <Controller
+                  name={item.name}
+                  control={control}
+                  render={({ field }) => <Input {...register(item.name)} {...field}/>}
+                />
               </Col>
             </>
             
@@ -63,7 +51,11 @@ export class SignUp extends Component {
             <>
             <Col span={item.fieldsize} className={item.className} >
                 <label><b>{item.label}:</b></label>
-                <Input value={values[item.name]} name={item.name} type={item.type} onChange={this.textChange}></Input>
+                <Controller
+                  name={item.name}
+                  control={control}
+                  render={({ field }) => <Input {...register(item.name)} type={item.type} {...field}/>}
+                />
               </Col>
             </>
           )
@@ -72,11 +64,13 @@ export class SignUp extends Component {
             <>
             <Col span={item.fieldsize} className={item.className}>
             <label><b>{item.label}: </b></label>
-            <Select 
-            value={dropDownValues[item.name + "SelectedOptiom"]}
-            onChange={(e,obj)=>this.dropDownChange(e,obj,false)}
-            placeholder={item.placeholder}
-            options={item.list} />
+            <Controller
+                  name={item.name}
+                  control={control}
+                  render={({ field }) =>
+                  <Select {...register(item.name)} options={item.list} {...field} />}
+                />
+            
             </Col>
             </>
           )
@@ -85,7 +79,11 @@ export class SignUp extends Component {
             <>
             <Col span={item.fieldsize} className={item.className} >
                 <label><b>{item.label}:</b></label>
-                <TextArea value={values[item.name]} name={item.name} rows={item.rows} onChange={this.textChange}></TextArea>
+                <Controller
+                  name={item.name}
+                  control={control}
+                  render={({ field }) => <TextArea {...register(item.name)} rows={item.rows} {...field} />}
+                />
               </Col>
             </>
           )
@@ -94,47 +92,58 @@ export class SignUp extends Component {
               <>
               <Col span={item.fieldsize} className={item.className} >
                   <label><b>{item.label}:</b></label>
-                  <Input value={values[item.name]} name={item.name} type={item.type} onChange={this.dateChange}></Input>
+                  <Controller
+                  name={item.name}
+                  control={control}
+                  render={({ field }) => <Input {...register(item.name)} type={item.type} {...field}/>}
+                />
                 </Col>
               </>
             )
       }
     })
-    this.setState({renderfields})
+    setState({renderfields})
   }
- 
-  render() {
-    const {
-      jobTypeList,
-      jobTypeIdSelectedOption,
-      renderfields
-    } = this.state
-    return (
-      <>
-        <Divider className='Main-Div' orientation="middle">
-          <Card className='SignUp-Card' sm={3}>
-            <h1>Registration</h1>
-            <Col span="3">
-            <label><b>Registration Type : </b></label>
-            <Select 
-            value={jobTypeIdSelectedOption}
+
+  const onSubmit = (event) =>{
+    console.log(event)
+  }
+  const dropDownChange = (selected,obj,isFromHeader) =>{
+        setState({
+          [obj?.name + "SelectedOption"]: obj,
+        })
+        reset();
+        if(isFromHeader){
+        renderfields(obj?.value)
+        }
+      }
+  return (
+    <>
+    <Divider className='Main-Div' orientation="middle">
+           <Card className='SignUp-Card' sm={3}>
+             <h1>Registration</h1>
+             <Col span="3">
+             <label><b>Registration Type : </b></label>
+             <Select 
+            value={state.jobTypeIdSelectedOption}
             placeholder = "Select Sign Up Type"
-            onChange={(e,obj)=>this.dropDownChange(e,obj,true)}
+            onChange={(e,obj)=>dropDownChange(e,obj,true)}
             name='signUpType'
-            options={jobTypeList}>
+            options={state.jobTypeList}>
             </Select></Col>
           </Card>
           <Card bordered={false} className='SignUp-Toggle-Card'>
           <Collapse accordion ghost={true} bordered={false}>
+            <Form>
           <Row className='Row-Div'>
-            {renderfields ? renderfields : ""}
+              {state.renderfields ? state.renderfields : ""}
             </Row>
+            </Form>
           </Collapse>
+          <Button type="primary" size='large' className='signUp-Submit' shape='square' onClick={handleSubmit(onSubmit)}> Sign Up</Button>
           </Card>
         </Divider>
-      </>
-    )
-  }
+    </>
+  )
 }
 
-export default SignUp
