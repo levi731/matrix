@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, redirect, useNavigate } from 'react-router-dom';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu, Breadcrumb} from 'antd';
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -12,8 +12,48 @@ import {
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
+const idb = window.indexedDB;
+const createCollectionInIndexDB = () =>{
+  if(!idb){
+   console.log("index db doesn't support")
+  }
+  console.log(idb)
+  const request = idb.open("JobSearchAcademy",1)
+  request.onerror = (event) =>{
+    console.log(event,"error")
+    console.log("Error Occurred")
+  }
+
+  request.onupgradeneeded = (event) =>{
+    const db = request.result;
+    if(!db.objectStoreNames.contains('StudentData')){
+      db.createObjectStore('StudentData',{
+        keyPath:'studentId',
+        autoIncrement:true
+      })
+    }
+    if(!db.objectStoreNames.contains('CompanyData')){
+      db.createObjectStore('CompanyData',{
+        keyPath:'companyId',
+        autoIncrement:true
+      })
+    }
+    if(!db.objectStoreNames.contains('CollegeData')){
+      db.createObjectStore('CollegeData',{
+        keyPath:'collegeId',
+        autoIncrement:true
+      })
+    }
+  }
+  request.onsuccess =() =>{
+    console.log('database Opened Successfully')
+  }
+}
 // Main component representing the application layout
 const App = () => {
+  useEffect(()=>{
+    createCollectionInIndexDB();
+  },[])
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider width={80} theme="dark">

@@ -35,14 +35,16 @@ export const FieldConstants = {
                     label: "Student Name",
                     name: "studentName",
                     fieldsize: 4,
-                    className: 'Col-Div'
+                    className: 'Col-Div',
+                    required:true
                 },
                 studentFatherName: {
                     type: NamingConstants.text,
                     label: "Student Father Name",
                     name: "studentFatherName",
                     fieldsize: 4,
-                    className: 'Col-Div'
+                    className: 'Col-Div',
+                    required:true
                 },
                 YearOfPassing: {
                     type: NamingConstants.dropDown,
@@ -51,7 +53,8 @@ export const FieldConstants = {
                     fieldsize: 4,
                     className: "Col-Div",
                     list: YearsList("yearOfPassingId"),
-                    placeholder:"Select Year"
+                    placeholder:"Select Year",
+                    required:true
                 },
             },
             College: {
@@ -60,14 +63,16 @@ export const FieldConstants = {
                     label: "College Name",
                     name: "collegeName",
                     fieldsize: 4,
-                    className: 'Col-Div'
+                    className: 'Col-Div',
+                    required:true
                 },
                 collegeEmail: {
                     type: NamingConstants.email,
                     label: "College Email",
                     name: "collegeEmail",
                     fieldsize: 4,
-                    className: 'Col-Div'
+                    className: 'Col-Div',
+                    required:true
                 },
                 collegeRemarks:{
                     type: NamingConstants.textArea,
@@ -76,6 +81,7 @@ export const FieldConstants = {
                     fieldsize: 6,
                     className: "Col-Div",
                     rows: 1,
+                    required:true
                 }
             },
             Company: {
@@ -84,21 +90,24 @@ export const FieldConstants = {
                     label: "Company Name",
                     name: "companyName",
                     fieldsize: 4,
-                    className: 'Col-Div'
+                    className: 'Col-Div',
+                    required:true
                 },
                 companyCode: {
                     type: NamingConstants.text,
                     label: "Company Code",
                     name: "companyCode",
                     fieldsize: 4,
-                    className: 'Col-Div'
+                    className: 'Col-Div',
+                    required:true
                 },
                 dateOfRegistration:{
                     type: NamingConstants.date,
                     label: "Date Of Registration",
                     name: "dateOfRegistration",
                     fieldsize: 4,
-                    className: 'Col-Div'
+                    className: 'Col-Div',
+                    required:true
                 }
             }
         }
